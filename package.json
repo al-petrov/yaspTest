@@ -1,0 +1,15 @@
+{
+  "name": "yasp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "screenshot.js",
+  "scripts": {
+    "start": "node screenshot.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "screenshot-desktop": "^1.12.7"
+  }
+}
