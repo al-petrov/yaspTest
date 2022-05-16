@@ -22,41 +22,42 @@ screenshot()
       ],
     };
 
-    var options = {
+    const options = {
       host: "vision.api.cloud.yandex.net",
       path: "/vision/v1/batchAnalyze",
       method: "POST",
     };
 
     function callback(response) {
-      var str = "";
+      let str = "";
       response.on("data", function (chunk) {
         str += chunk;
       });
 
       response.on("end", function () {
         let myResp = JSON.parse(str);
+        console.log(myResp.results);
         let blocks = myResp.results[0].results[0].textDetection.pages[0].blocks;
         let myText = "";
-        blocks.forEach((block) => {
-          block.lines.forEach((line) => {
-            line.words.forEach((word) => [(myText += " " + word.text)]);
-          });
+        blocks.forEach(({ lines }) => {
+          myText += "\n";
+          lines.forEach(({ words }) =>
+            words.forEach(({ text }) => (myText += " " + text))
+          );
         });
-        // console.log(myText);
 
         fs.writeFile("text.txt", myText, function (err) {
           if (err) return console.log(err);
-          console.log("Hello World > helloworld.txt");
+          console.log("text recognised: text.txt");
         });
       });
     }
 
-    var req = https.request(options, callback);
+    let req = https.request(options, callback);
     req.setHeader("Content-Type", "application/json");
     req.setHeader(
       "Authorization",
-      "Bearer t1.9euelZqQmYudjpTKz5WXl4nMi56NzO3rnpWal5Gclo2cmZuenZqdnZWJiZjl8_d1D3xr-e8RME08_d3z9zU-eWv57xEwTTz9.nhG_62cM_Rvmo0L2MHxQAgoeWFZjhznHseLoCJm00NHRVxUoZesZUzY8SVIb8e9_Pe0CEEIizjklhMZQzDBDAg"
+      "Bearer t1.9euelZrImMbHmMiLy5HJzZjIm5CKmu3rnpWal5Gclo2cmZuenZqdnZWJiZjl8_cnW3Vr-e8pexd8_t3z92cJc2v57yl7F3z-.ohwfzVavJWchoWIE52iGC8Tyf2Q_DT7AVgLr6Uc3IoXuROY4uczjAndF6t_iKG9tXBmfgPRqVxB7HcM7SCc0BA"
     );
     req.write(JSON.stringify(reqBody));
     req.end();
